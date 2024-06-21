@@ -1,19 +1,13 @@
 ﻿using Humanizer;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StringManipulation
 {
     public class StringOperations
     {
-        private readonly ILogger _logger;
-        public StringOperations() {
-        }
+        private readonly ILogger<StringOperations> _logger;
 
         public StringOperations(ILogger<StringOperations> logger)
         {
@@ -34,9 +28,9 @@ namespace StringManipulation
 
         public int GetStringLength(string str)
         {
-            if(str is null)
+            if (str == null)
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(nameof(str));
             }
 
             return str.Length;
@@ -45,15 +39,15 @@ namespace StringManipulation
         public string RemoveWhitespace(string input)
         {
             return new string(input.ToCharArray()
-                .Where(c => !Char.IsWhiteSpace(c))
+                .Where(c => !char.IsWhiteSpace(c))
                 .ToArray());
         }
 
         public string TruncateString(string input, int maxLength)
         {
-            if(maxLength <=0)
+            if (maxLength <= 0)
             {
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(maxLength));
             }
 
             if (string.IsNullOrEmpty(input) || maxLength >= input.Length)
@@ -72,16 +66,8 @@ namespace StringManipulation
 
         public int CountOccurrences(string input, char character)
         {
-            int count = 0;
-            foreach (char c in input)
-            {
-                if (c == character)
-                {
-                    count++;
-                }
-            }
-
-            _logger.LogInformation($"Number of concurrecies is:{count}");
+            int count = input.Count(c => c == character);
+            _logger.LogInformation($"Number of occurrences of '{character}' is: {count}");
             return count;
         }
 
@@ -104,6 +90,5 @@ namespace StringManipulation
         {
             return fileReader.ReadString(fileName);
         }
-
     }
 }
